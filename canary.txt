@@ -1,0 +1,2 @@
+This is a canary file for the B4-01 Cloud Shell deep-link security test.
+If you can read this, the repository was successfully cloned.
