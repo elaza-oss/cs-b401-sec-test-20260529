@@ -1,0 +1,26 @@
+#!/bin/bash
+# B4-01 PoC: .customize_environment canary
+# This script tests whether .customize_environment from a cloned repo
+# is auto-executed by Cloud Shell deep-link flow.
+#
+# ETHICAL BOUNDS: This script only writes a local canary file.
+# It does NOT exfiltrate any data. It does NOT phone home.
+# It is designed for testing in YOUR OWN Cloud Shell session only.
+
+echo "B4-01-CANARY: customize_environment executed at $(date -u +%Y-%m-%dT%H:%M:%SZ)" > /tmp/b4-01-canary.txt
+echo "B4-01-CANARY: USER=$USER HOME=$HOME PWD=$PWD" >> /tmp/b4-01-canary.txt
+echo "B4-01-CANARY: CLOUD_SHELL=$CLOUD_SHELL" >> /tmp/b4-01-canary.txt
+
+# Test if credentials are available (DO NOT exfiltrate — just record presence)
+if gcloud auth print-access-token >/dev/null 2>&1; then
+    echo "B4-01-CANARY: gcloud token AVAILABLE" >> /tmp/b4-01-canary.txt
+else
+    echo "B4-01-CANARY: gcloud token NOT AVAILABLE" >> /tmp/b4-01-canary.txt
+fi
+
+# Record the environment type
+if [ -f /google/devshell/customize_environment_done ]; then
+    echo "B4-01-CANARY: customize_environment_done marker EXISTS" >> /tmp/b4-01-canary.txt
+else
+    echo "B4-01-CANARY: customize_environment_done marker MISSING" >> /tmp/b4-01-canary.txt
+fi
